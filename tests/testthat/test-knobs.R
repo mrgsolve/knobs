@@ -9,7 +9,7 @@ context("test-knobs")
 
 mod <- mrgsolve::house(atol=1E-20,rtol=1E-12,digits=8)
 
-out <- knobs(mod %>% init(GUT=0), CL=c(1,2,3), foo=c(2,3,4),fooo=1, amt=c(100,200), cmt=1)
+out <- knobs::knobs(mod %>% init(GUT=0), CL=c(1,2,3), foo=c(2,3,4),fooo=1, amt=c(100,200), cmt=1)
 dfout <- as.data.frame(out)
 
 test_that("knobs() returns object of class knobs", {

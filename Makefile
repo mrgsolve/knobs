@@ -40,3 +40,5 @@ check:
 	make doc
 	make build
 	R CMD check ${TARBALL} --no-manual
+test:
+	Rscript -e 'testthat::test_dir("tests/testthat")'

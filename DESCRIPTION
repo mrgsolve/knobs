@@ -12,8 +12,11 @@ Maintainer: Kyle Baron <kylebtwin@imap.cc>
 Description: Automatically create batched simulations over different parameter
     values or dose amounts.
 License: GPL (>=2)
-Depends: mrgsolve, methods
-Imports: dplyr
+Depends: 
+    R (>= 3.1.2),
+    mrgsolve
+Imports: dplyr, methods
+Suggests: testthat
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.0

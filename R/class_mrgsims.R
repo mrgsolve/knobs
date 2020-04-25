@@ -1,3 +1,5 @@
+#' @import methods
+NULL
 
 ##' S4 class for mrgsolve simulation output
 ##'
@@ -27,4 +29,7 @@ setClass("knobs",contains="mrgsims",
          )
 )
 
-
+#' @export
+as.data.frame.knobs <- function(x, row.names = NULL, optional = FALSE, ...) {
+  x@data
+}

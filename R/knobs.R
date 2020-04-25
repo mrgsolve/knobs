@@ -1,5 +1,5 @@
-#' @importFrom graphics plot
-#' @importFrom methods new show selectMethod
+
+#' @import methods
 #' @importFrom stats as.formula
 #' @importFrom utils head
 #' @importFrom mrgsolve param is.mrgsims
@@ -9,6 +9,7 @@ variables <- function(x) {
   stopifnot(mrgsolve::is.mrgsims(x))
   return(c(x@request,x@outnames))
 }
+
 batch <- function(x) x@batch   #nocov
 moving <- function(x) x@moving #nocov
 
@@ -197,6 +198,13 @@ setMethod("show", "knobs", function(object) {
 #' @param type passed to xyplot
 #' @param ... arguments passed to xyplot
 #' @export
+#' @aliases plot,knobs
+#' @rdname plot_knobs
+#'
+#' @exportMethod plot
+setGeneric(name = "plot", def = function (x, y, ...) standardGeneric("plot"))
+
+#' @export
 #' @rdname plot_knobs
 setMethod("plot", c("knobs","missing"), function(x,yval=variables(x),auto.key=list(),mincol=3,...) {
   new_plot_knobs(x,yval,auto.key,mincol,...)
@@ -255,9 +263,7 @@ new_plot_knobs <- function(x,yval,auto.key,mincol,...) {
     auto.key <- list(columns = min(nlevels(grval),mincol))
   }
 
-  foo <- methods::selectMethod("plot", signature = c("knobs", "formula"))
-
-  foo(x,as.formula(form),..., groups=grval,auto.key=auto.key)
+  plot(x,as.formula(form),..., groups=grval,auto.key=auto.key)
 
 }
 
@@ -276,8 +282,8 @@ setMethod("plot", c("knobs","formula"), function(x,y,
 
   if(y[[3]] == '.') {
     yval <- all.vars(y[[2]])
-    foo <- methods::selectMethod("plot", signature = c("knobs", "missing"))
-    return(foo(x,yval=as.character(yval),
+
+    return(plot(x,yval=as.character(yval),
                 show.grid=show.grid,
                 lwd=lwd, type=type,
                 auto.key=auto.key,
