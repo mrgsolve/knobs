@@ -19,7 +19,6 @@ pkgdown:
 	touch ../../mrgsolve/docs/.nojekyll
 
 cran:
-	make house
 	make doc
 	make build
 	R CMD CHECK --as-cran ${TARBALL}
@@ -38,8 +37,6 @@ install:
 	R CMD INSTALL --install-tests ${TARBALL} -l ~/Rlibs
 
 check:
-	make house
 	make doc
 	make build
 	R CMD check ${TARBALL} --no-manual
-	make unit

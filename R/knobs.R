@@ -1,6 +1,13 @@
 
+#' @importFrom graphics plot
+#' @importFrom methods new
+#' @importFrom stats as.formula
+#' @importFrom utils head
+#' @importFrom mrgsolve param is.mrgsims
+NULL
+
 variables <- function(x) {
-  stopifnot(is.mrgsims(x))
+  stopifnot(mrgsolve::is.mrgsims(x))
   return(c(x@request,x@outnames))
 }
 batch <- function(x) x@batch   #nocov
@@ -27,6 +34,8 @@ moving <- function(x) x@moving #nocov
 ##' @export
 ##' @examples
 ##' ## example("knobs")
+##'
+##' library(mrgsolve)
 ##'
 ##' mod <- mrgsolve::house(end=72)
 ##'
@@ -72,7 +81,7 @@ setMethod("knobs", c("mrgmod", "missing"),  function(x,...) {
     input <- input[!is.element(names(input),c("ii","amt","rate","addl","ss","cmt"))]
   }
 
-  p <- names(param(x))
+  p <- names(mrgsolve::param(x))
 
   keep <- is.element(names(input),c(p,c("ii","amt","rate","addl","ss","cmt")))
 
