@@ -2,3 +2,4 @@ Makefile
 test.R
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^README\.Rmd$

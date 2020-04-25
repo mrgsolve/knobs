@@ -22,7 +22,6 @@ cran:
 	make house
 	make doc
 	make build
-	export _MRGSOLVE_SKIP_MODLIB_BUILD_=false
 	R CMD CHECK --as-cran ${TARBALL}
 
 readme:
