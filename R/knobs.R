@@ -1,6 +1,5 @@
-
 #' @importFrom graphics plot
-#' @importFrom methods new
+#' @importFrom methods new show selectMethod
 #' @importFrom stats as.formula
 #' @importFrom utils head
 #' @importFrom mrgsolve param is.mrgsims
@@ -13,60 +12,60 @@ variables <- function(x) {
 batch <- function(x) x@batch   #nocov
 moving <- function(x) x@moving #nocov
 
-##' Run sensitivity analysis on model settings
-##'
-##' Knobs can be parameter values or PK dosing items (e.g. amt).
-##' By design, all combinations of specified knob/values are simulated.
-##'
-##' @param x the model object
-##' @param y a \code{batch_mrgsims} object
-##' @param ... knobs: named numeric vectors that identify knob names and knob
-##' values for a
-##' batch run.  See details.
-##' @name knobs
-##' @return An object of class \code{batch_mrgsims}.  Most methods for
-##' \code{mrgsims} objects also work on \code{batch_mrgsims} object.
-##' @details
-##' Valid knob names include: any parameter name (in \code{param(mod)}),
-##' time variables (\code{start}, \code{end}, \code{delta}), PK dosing items
-##' (\code{amt}, \code{ii}, \code{rate}, and others ...), and solver settings
-##' (\code{atol}, \code{hmax}, etc...).
-##' @export
-##' @examples
-##' ## example("knobs")
-##'
-##' library(mrgsolve)
-##'
-##' mod <- mrgsolve::house(end=72)
-##'
-##' events <- ev(amt=1000, cmt=1, addl=3, ii=12)
-##'
-##' out <- mod %>% ev(events) %>% knobs(CL=c(1,2,3))
-##' plot(out)
-##'
-##' out
-##'
-##' out <- mod %>% ev(events) %>% knobs(CL=c(1,2,3), VC=c(5,20,50))
-##' plot(out)
-##' plot(out,CP~.)
-##' plot(out, CP~time|VC, groups=CL, lty=2)
-##'
-##' out <- knobs(mod, amt=c(100,300,500), cmt=1)
-##' plot(out)
-##'
-##' out <- mod %>% knobs(amt=c(100,300), CL=c(1,3), VC=c(5,20), cmt=1)
-##' plot(out)
-##' plot(out, CP~.)
-##'
-##' out <- knobs(mod, CL=c(1,2,3))
-##' out
-##'
-##' out <- knobs(mod, CL=c(1,2,3))
-##' out
+#' Run sensitivity analysis on model settings
+#'
+#' Knobs can be parameter values or PK dosing items (e.g. amt).
+#' By design, all combinations of specified knob/values are simulated.
+#'
+#' @param x the model object
+#' @param y a \code{knobs} object
+#' @param ... knobs: named numeric vectors that identify knob names and knob
+#' values for a
+#' batch run.  See details.
+#' @name knobs
+#' @return An object of class \code{batch_mrgsims}.  Most methods for
+#' \code{mrgsims} objects also work on \code{batch_mrgsims} object.
+#' @details
+#' Valid knob names include: any parameter name (in \code{param(mod)}),
+#' time variables (\code{start}, \code{end}, \code{delta}), PK dosing items
+#' (\code{amt}, \code{ii}, \code{rate}, and others ...), and solver settings
+#' (\code{atol}, \code{hmax}, etc...).
+#' @export
+#' @examples
+#' ## example("knobs")
+#'
+#' library(mrgsolve)
+#'
+#' mod <- mrgsolve::house(end=72)
+#'
+#' events <- ev(amt=1000, cmt=1, addl=3, ii=12)
+#'
+#' out <- mod %>% ev(events) %>% knobs(CL=c(1,2,3))
+#' plot(out)
+#'
+#' out
+#'
+#' out <- mod %>% ev(events) %>% knobs(CL=c(1,2,3), VC=c(5,20,50))
+#' plot(out)
+#' plot(out,CP~.)
+#' plot(out, CP~time|VC, groups=CL, lty=2)
+#'
+#' out <- knobs(mod, amt=c(100,300,500), cmt=1)
+#' plot(out)
+#'
+#' out <- mod %>% knobs(amt=c(100,300), CL=c(1,3), VC=c(5,20), cmt=1)
+#' plot(out)
+#' plot(out, CP~.)
+#'
+#' out <- knobs(mod, CL=c(1,2,3))
+#' out
+#'
+#' out <- knobs(mod, CL=c(1,2,3))
+#' out
 setGeneric("knobs", function(x,y,...) standardGeneric("knobs"))
 
-##' @rdname knobs
-##' @export
+#' @rdname knobs
+#' @export
 setMethod("knobs", c("mrgmod", "missing"),  function(x,...) {
 
   input <- list(...)
@@ -127,7 +126,7 @@ setMethod("knobs", c("mrgmod", "missing"),  function(x,...) {
   data <- data[,unique(c("ID",whatkn)),drop=FALSE]
   out <- dplyr::left_join(out,data, by="ID")
 
-  new("batch_mrgsims",
+  new("knobs",
       data=as.data.frame(out),
       mod=x,
       batch=data,
@@ -140,33 +139,33 @@ setMethod("knobs", c("mrgmod", "missing"),  function(x,...) {
 })
 
 
-##' @rdname knobs
-##' @export
-setMethod("knobs", c("mrgmod", "batch_mrgsims"), function(x,y,...) {
+#' @rdname knobs
+#' @export
+setMethod("knobs", c("mrgmod", "knobs"), function(x,y,...) {
   input <- merge(y@input, list(...), open=TRUE)
   do.call("knobs", c(list(x),input))
 })
 
 
-##' @param row.names passed to \code{as.data.frame.data.frame}
-##' @param optional passed to \code{as.data.frame.data.frame}
-##' @rdname knobs
-##' @export
-setMethod("as.data.frame","batch_mrgsims", function(x,row.names=NULL, optional=FALSE,...) {
+#' @param row.names passed to \code{as.data.frame.data.frame}
+#' @param optional passed to \code{as.data.frame.data.frame}
+#' @rdname knobs
+#' @export
+setMethod("as.data.frame","knobs", function(x,row.names=NULL, optional=FALSE,...) {
   as.data.frame(x@data, row.names,optional,...)
 })
 
-##' @rdname knobs
-##' @export
-setMethod("knobs", "batch_mrgsims", function(x,...) {
+#' @rdname knobs
+#' @export
+setMethod("knobs", "knobs", function(x,...) {
   x@knobs
 })
 
-##' @param object the object to show
-##' @rdname knobs
-##' @export
-##' @keywords internal
-setMethod("show", "batch_mrgsims", function(object) {
+#' @param object the object to show
+#' @rdname knobs
+#' @export
+#' @keywords internal
+setMethod("show", "knobs", function(object) {
 
   cat("Model: ", object@mod@model,"\n")
   cat("Batch (head): \n")
@@ -185,26 +184,27 @@ setMethod("show", "batch_mrgsims", function(object) {
   return(invisible(NULL))
 })
 
-##' Plot method for mrgsims objects
-##'
-##' @param x mrgsims object
-##' @param y a formula passed to xyplot
-##' @param yval y variables to plot
-##' @param show.grid print grid in the plot
-##' @param lwd passed to xyplot
-##' @param scales passed to xyplot
-##' @param auto.key passed to xyplot
-##' @param mincol minimum number of columns in key
-##' @param type passed to xyplot
-##' @param ... arguments passed to xyplot
-##' @export
-##' @rdname plot_batch_mrgsims
-setMethod("plot", c("batch_mrgsims","missing"), function(x,yval=variables(x),auto.key=list(),mincol=3,...) {
+#' Plot method for mrgsims objects
+#'
+#' @param x mrgsims object
+#' @param y a formula passed to xyplot
+#' @param yval y variables to plot
+#' @param show.grid print grid in the plot
+#' @param lwd passed to xyplot
+#' @param scales passed to xyplot
+#' @param auto.key passed to xyplot
+#' @param mincol minimum number of columns in key
+#' @param type passed to xyplot
+#' @param ... arguments passed to xyplot
+#' @export
+#' @rdname plot_knobs
+setMethod("plot", c("knobs","missing"), function(x,yval=variables(x),auto.key=list(),mincol=3,...) {
   new_plot_knobs(x,yval,auto.key,mincol,...)
 })
 
 
 new_plot_knobs <- function(x,yval,auto.key,mincol,...) {
+
 
   m <- moving(x)
 
@@ -244,7 +244,7 @@ new_plot_knobs <- function(x,yval,auto.key,mincol,...) {
     dr <- unique(df[1,m[c((keep+1):nm)],drop=FALSE])
     retain <- cbind(kp,dr)
     df <- dplyr::inner_join(df,retain, by=names(retain))
-    message("Dropping knobs: ", paste(names(dr),collapse=","))
+    message("dropping knobs: ", paste(names(dr),collapse=","))
   }
 
   x@data <- as.data.frame(df)
@@ -255,13 +255,15 @@ new_plot_knobs <- function(x,yval,auto.key,mincol,...) {
     auto.key <- list(columns = min(nlevels(grval),mincol))
   }
 
-  plot(x,as.formula(form),..., groups=grval,auto.key=auto.key)
+  foo <- methods::selectMethod("plot", signature = c("knobs", "formula"))
+
+  foo(x,as.formula(form),..., groups=grval,auto.key=auto.key)
 
 }
 
-##' @export
-##' @rdname plot_batch_mrgsims
-setMethod("plot", c("batch_mrgsims","formula"), function(x,y,
+#' @export
+#' @rdname plot_knobs
+setMethod("plot", c("knobs","formula"), function(x,y,
                                                          show.grid=TRUE,
                                                          lwd=2,
                                                          type="l",
@@ -274,7 +276,8 @@ setMethod("plot", c("batch_mrgsims","formula"), function(x,y,
 
   if(y[[3]] == '.') {
     yval <- all.vars(y[[2]])
-    return(plot(x,yval=as.character(yval),
+    foo <- methods::selectMethod("plot", signature = c("knobs", "missing"))
+    return(foo(x,yval=as.character(yval),
                 show.grid=show.grid,
                 lwd=lwd, type=type,
                 auto.key=auto.key,

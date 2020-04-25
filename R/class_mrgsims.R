@@ -17,7 +17,7 @@ setClass("mrgsims",
          )
 )
 
-setClass("batch_mrgsims",contains="mrgsims",
+setClass("knobs",contains="mrgsims",
          slots=c(
            knobs="character",
            batch="data.frame",

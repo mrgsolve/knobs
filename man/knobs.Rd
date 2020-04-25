@@ -3,28 +3,28 @@
 \name{knobs}
 \alias{knobs}
 \alias{knobs,mrgmod,missing-method}
-\alias{knobs,mrgmod,batch_mrgsims-method}
-\alias{as.data.frame,batch_mrgsims-method}
-\alias{knobs,batch_mrgsims,ANY-method}
-\alias{show,batch_mrgsims-method}
+\alias{knobs,mrgmod,knobs-method}
+\alias{as.data.frame,knobs-method}
+\alias{knobs,knobs,ANY-method}
+\alias{show,knobs-method}
 \title{Run sensitivity analysis on model settings}
 \usage{
 knobs(x, y, ...)
 
 \S4method{knobs}{mrgmod,missing}(x, y, ...)
 
-\S4method{knobs}{mrgmod,batch_mrgsims}(x, y, ...)
+\S4method{knobs}{mrgmod,knobs}(x, y, ...)
 
-\S4method{as.data.frame}{batch_mrgsims}(x, row.names = NULL, optional = FALSE, ...)
+\S4method{as.data.frame}{knobs}(x, row.names = NULL, optional = FALSE, ...)
 
-\S4method{knobs}{batch_mrgsims,ANY}(x, y, ...)
+\S4method{knobs}{knobs,ANY}(x, y, ...)
 
-\S4method{show}{batch_mrgsims}(object)
+\S4method{show}{knobs}(object)
 }
 \arguments{
 \item{x}{the model object}
 
-\item{y}{a \code{batch_mrgsims} object}
+\item{y}{a \code{knobs} object}
 
 \item{...}{knobs: named numeric vectors that identify knob names and knob
 values for a
@@ -52,6 +52,8 @@ time variables (\code{start}, \code{end}, \code{delta}), PK dosing items
 }
 \examples{
 ## example("knobs")
+
+library(mrgsolve)
 
 mod <- mrgsolve::house(end=72)
 

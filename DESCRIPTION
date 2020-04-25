@@ -1,12 +1,17 @@
 Package: knobs
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Automated Batch Simulation with 'mrgsolve'
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Authors@R: 
+    c(person(given = "Kyle T",
+             family = "Baron",
+             role = c("aut", "cre"),
+             email = "kylebtwin@imap.cc",
+             comment = c(ORCID = "0000-0001-7252-5656")))
+Maintainer: Kyle Baron <kylebtwin@imap.cc>
+Description: Automatically create batched simulations over different parameter
+    values or dose amounts.
+License: GPL (>=2)
 Depends: mrgsolve, methods
 Imports: dplyr
 Encoding: UTF-8
